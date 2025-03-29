@@ -1,0 +1,38 @@
+from app import db  # Імпортуємо об'єкт db із нашого додатку
+from flask_login import UserMixin
+from flask_bcrypt import generate_password_hash, check_password_hash
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)  # Унікальний ID користувача
+    username = db.Column(db.String(80), unique=True, nullable=False)  # Унікальне ім'я
+    email = db.Column(db.String(120), unique=True, nullable=False)  # Унікальний email
+
+    check_password_hash = db.Column(db.String(128), nullable=False)  # Хеш пароля
+
+''' ❌ У класі User ти використовуєш check_password_hash(self.password_hash, password),
+    але у тебе немає поля password_hash, а є check_password_hash (яке ще й назване неправильно).'''
+    # password_hash = db.Column(db.String(128), nullable=False)
+
+    ''' ❌ Відсутній зв’язок між User і Task
+    Було б добре додати tasks = db.relationship('Task', backref='owner', lazy=True), щоб можна було легко отримувати всі задачі користувача.'''
+    # tasks = db.relationship('Task', backref='owner', lazy=True)  # Зв'язок із задачами
+
+
+    def set_password(self, password):
+        """Хешуємо пароль перед збереженням"""
+        self.password_hash = generate_password_hash(password).decode('utf-8')
+
+        # ❌ Тут ти хешуєш текст 'utf-8' замість справжнього пароля!
+        # ✅ Має бути:
+        # self.password_hash = generate_password_hash(password).decode('utf-8')
+
+    def check_password(self, password):
+        """Перевіряємо пароль"""
+        return check_password_hash(self.password_hash, password)
+
+
+class Task(db.Model):
+    id = db.Column(db.Integer, primary_key=True)  # Унікальний ID задачі
+    title = db.Column(db.String(80), unique=False, nullable=False)  # Назва задачі
+    is_done = db.Column(db.Boolean, default=False)  # Статус задачі (True або False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Прив’язка до User, Поле для зовнішнього ключа (зв'язок із таблицею користувачів)
