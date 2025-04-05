@@ -4,9 +4,9 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
-db = SQLAlchemy()
-login_manager = LoginManager()
-bcrypt = Bcrypt()
+db = SQLAlchemy() # підключення бібліотеки
+login_manager = LoginManager() # підключення логін менеджера
+bcrypt = Bcrypt() # підключення кріптографії
 
 def create_app():
     app = Flask(__name__)  # Створюємо екземпляр Flask-додатку
@@ -14,8 +14,8 @@ def create_app():
 
     db.init_app(app)  # Ініціалізуємо SQLAlchemy
     Migrate(app, db)  # Підключаємо Flask-Migrate
-    login_manager.init_app(app)
-    bcrypt.init_app(app)
+    login_manager.init_app(app) # ініціалізація логінменеджера
+    bcrypt.init_app(app) # ініціалізація криптографії
 
     login_manager.login_view = 'auth.login'  # Сторінка входу для неавторизованих користувачів
 
