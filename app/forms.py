@@ -1,5 +1,7 @@
 from flask_wtf import FlaskForm
+from sqlalchemy import Boolean
 from wtforms import StringField, PasswordField, SubmitField
+from wtforms.fields.simple import BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 class RegistrationForm(FlaskForm):
@@ -13,3 +15,8 @@ class LoginForm(FlaskForm):
     email = StringField('Email', [DataRequired(), Email()])
     password = PasswordField('Пароль', [DataRequired()])
     submit = SubmitField('Войти')
+
+class TaskForm(FlaskForm):
+    title = StringField('Название задачи', [DataRequired()])
+    is_done = BooleanField('Выполнено')
+    submit = SubmitField('Сохранить')

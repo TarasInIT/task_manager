@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задачи</title>
+</head>
+<body>
+    <h2>Задачи</h2>
+    <a href="{{ url_for('tasks.create') }}">Создать задачу</a>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <b>{{task.title}}</b>
+                {% if task.is_done %}
+                    <span style="color: green;">[Выполнено]</span>
+                {% else %}
+                    <span style="color: red;">[Не выполнено]</span>
+                {% endif %}
+                <a href="{{ url_for('tasks.edit_task', task_id=task.id) }}">Редактировать</a>
+                <form action="{{ url_for('tasks.delete_task', task_id=task.id) }}" method="post" style="display:inline;">
+                    <input type="submit" value="Удалить">
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

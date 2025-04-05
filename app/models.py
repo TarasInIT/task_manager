@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import db  # Імпортуємо об'єкт db із нашого додатку
 from flask_login import UserMixin
 from flask_bcrypt import generate_password_hash, check_password_hash
@@ -21,4 +22,9 @@ class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)  # Унікальний ID задачі
     title = db.Column(db.String(80), unique=False, nullable=False)  # Назва задачі
     is_done = db.Column(db.Boolean, default=False)  # Статус задачі (True або False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Прив’язка до User, Поле для зовнішнього ключа (зв'язок із таблицею користувачів)
+
+    def __repr__(self):
+        return f"<Task {self.title}"
+

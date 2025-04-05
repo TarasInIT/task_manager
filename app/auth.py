@@ -13,15 +13,8 @@ auth = Blueprint('auth', __name__)
 def register():
     form = RegistrationForm()  # Ініціалізуємо форму
     if form.validate_on_submit():  # Перевіряємо, чи форма була надіслана і коректна
-        # Хешування пароля через bcrypt (варіант 1 - вручну):
-        # hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-
-        # Створення нового користувача з даними з форми.
-        user = User(username=form.username.data, email=form.email.data)
-
-        # Альтернативний спосіб – встановлення пароля через метод моделі (варіант 2):
-        user.set_password(form.password.data)  # Метод сам хешує пароль
-
+        user = User(username=form.username.data, email=form.email.data) # Створення нового користувача з даними з форми.
+        user.set_password(form.password.data) # Метод сам хешує пароль
         db.session.add(user)  # Додаємо користувача до сесії бази даних
         db.session.commit()  # Зберігаємо зміни
         flash('Congratulations, you are now a registered user!', 'success')  # Повідомлення успіху
@@ -34,9 +27,6 @@ def login():
     form = LoginForm()  # Ініціалізація форми логіну
     if form.validate_on_submit():  # Перевірка форми
         user = User.query.filter_by(email=form.email.data).first()  # Пошук користувача за email
-
-        # Перевірка пароля (варіант 1 — безпосередньо з bcrypt):
-        # if user and bcrypt.check_password_hash(user.password, form.password.data):
 
         # Перевірка пароля (варіант 2 — через метод моделі, наприклад check_password())
         if user and user.check_password(form.password.data):

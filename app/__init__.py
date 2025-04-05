@@ -20,11 +20,12 @@ def create_app():
     login_manager.login_view = 'auth.login'  # Сторінка входу для неавторизованих користувачів
 
     # Імпорт blueprint'ів
-    from app.routes import main
+    from app.routes import tasks, main
     from app.auth import auth
 
     # Реєстрація blueprint'ів
     app.register_blueprint(main)
+    app.register_blueprint(tasks, url_prefix="/tasks")
     app.register_blueprint(auth, url_prefix="/auth")
 
     return app
