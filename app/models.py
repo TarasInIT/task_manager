@@ -8,11 +8,6 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)  # Унікальний email
     password_hash = db.Column(db.String(128), nullable=False) # Хеш пароля
 
-# ''' ❌ Відсутній зв’язок між User і Task
-#     Було б добре додати tasks = db.relationship('Task', backref='owner', lazy=True), щоб можна було легко отримувати всі задачі користувача.'''
-    tasks = db.relationship('Task', backref='owner', lazy=True)  # Зв'язок із задачами
-
-
     def set_password(self, password):
         """Хешуємо пароль перед збереженням"""
         self.password_hash = generate_password_hash(password).decode('utf-8')

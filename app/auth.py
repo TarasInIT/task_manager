@@ -2,6 +2,8 @@ from flask import Blueprint, url_for, flash, render_template, redirect
 from app import db, bcrypt  # Імпортуємо базу даних і bcrypt для хешування паролів
 from app.forms import RegistrationForm, LoginForm  # Імпортуємо форми реєстрації та логіну
 from app.models import User  # Імпортуємо модель користувача
+from flask_login import login_user, logout_user, login_required
+
 
 # Створюємо blueprint для групи маршрутів, пов’язаних з аутентифікацією
 auth = Blueprint('auth', __name__)
@@ -15,7 +17,7 @@ def register():
         # hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
         # Створення нового користувача з даними з форми.
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(username=form.username.data, email=form.email.data)
 
         # Альтернативний спосіб – встановлення пароля через метод моделі (варіант 2):
         user.set_password(form.password.data)  # Метод сам хешує пароль
